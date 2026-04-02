@@ -1,5 +1,5 @@
 import { createApp } from './app.js'
-import { env } from './lib/env'
+import { env } from './lib/env.js'
 
 async function bootstrap() {
   const app = await createApp()
