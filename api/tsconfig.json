@@ -10,8 +10,8 @@
     "resolveJsonModule": true,
     "baseUrl": ".",
     "paths": {
-      "@nexus/shared": ["../../packages/shared/src/index.ts"],
-      "@nexus/shared/*": ["../../packages/shared/src/*"]
+      "@nexus/shared": ["./shared/dist/index.js"],
+      "@nexus/shared/*": ["./shared/dist/*"]
     }
   },
   "include": ["src", "prisma/seed.ts"]
