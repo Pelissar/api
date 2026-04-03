@@ -6,18 +6,21 @@ import multipart from '@fastify/multipart'
 import rateLimit from '@fastify/rate-limit'
 import fastifyStatic from '@fastify/static'
 import { ZodError } from 'zod'
+
+// ✅ IMPORTS LOCAIS COM .js
 import { env } from './lib/env.js'
 import { AppError } from './lib/errors.js'
-import { authRoutes } from './modules/auth/routes'
-import { clientRoutes } from './modules/clients/routes'
-import { planRoutes } from './modules/plans/routes'
-import { licenseRoutes } from './modules/licenses/routes'
-import { updateRoutes } from './modules/updates/routes'
-import { dashboardRoutes } from './modules/dashboard/routes'
-import { auditRoutes } from './modules/audit/routes'
-import { desktopRoutes } from './modules/desktop/routes'
-import { portalRoutes } from './modules/portal/routes'
-import { supportRoutes } from './modules/support/routes'
+
+import { authRoutes } from './modules/auth/routes.js'
+import { clientRoutes } from './modules/clients/routes.js'
+import { planRoutes } from './modules/plans/routes.js'
+import { licenseRoutes } from './modules/licenses/routes.js'
+import { updateRoutes } from './modules/updates/routes.js'
+import { dashboardRoutes } from './modules/dashboard/routes.js'
+import { auditRoutes } from './modules/audit/routes.js'
+import { desktopRoutes } from './modules/desktop/routes.js'
+import { portalRoutes } from './modules/portal/routes.js'
+import { supportRoutes } from './modules/support/routes.js'
 
 function isOriginAllowed(origin: string | undefined): boolean {
   if (!origin) return true
@@ -43,31 +46,37 @@ export async function createApp() {
     logger: true
   })
 
+  // garante pasta de storage
   fs.mkdirSync(env.STORAGE_DIR, { recursive: true })
 
+  // plugins
   await app.register(cors, {
     origin: (origin, callback) => {
       callback(null, isOriginAllowed(origin))
     }
   })
+
   await app.register(rateLimit, {
     global: false,
     skipOnError: true
   })
+
   await app.register(multipart, {
     limits: {
-      fileSize: 1024 * 1024 * 1024
+      fileSize: 1024 * 1024 * 1024 // 1GB
     }
   })
+
   await app.register(fastifyStatic, {
     root: path.resolve(env.STORAGE_DIR),
     prefix: '/storage/'
   })
 
+  // tratamento de erros
   app.setErrorHandler((error, _request, reply) => {
     if (error instanceof ZodError) {
       return reply.status(400).send({
-        message: 'Dados invalidos.',
+        message: 'Dados inválidos.',
         issues: error.issues
       })
     }
@@ -79,17 +88,20 @@ export async function createApp() {
     }
 
     app.log.error(error)
+
     return reply.status(500).send({
       message: 'Erro interno do servidor.'
     })
   })
 
+  // healthcheck
   app.get('/health', async () => ({
     ok: true,
     service: 'nexus-api',
     timestamp: new Date().toISOString()
   }))
 
+  // rotas
   await authRoutes(app)
   await dashboardRoutes(app)
   await clientRoutes(app)
