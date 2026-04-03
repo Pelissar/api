@@ -8,13 +8,7 @@
     "outDir": "dist",
     "rootDir": "src",
     "esModuleInterop": true,
-    "resolveJsonModule": true,
-
-    "baseUrl": ".",
-    "paths": {
-      "@nexus/shared": ["./shared/dist/index.d.ts"],
-      "@nexus/shared/*": ["./shared/dist/*.d.ts"]
-    }
+    "resolveJsonModule": true
   },
   "include": ["src", "prisma/seed.ts"]
 }
