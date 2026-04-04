@@ -8,12 +8,12 @@ import {
   renewLicenseSchema,
   updateCheckSchema
 } from '@nexus/shared'
-import { prisma } from '../../lib/prisma'
-import { parseWithSchema } from '../../lib/validation'
-import { requireAdminAuth } from '../../plugins/auth'
-import { AppError } from '../../lib/errors'
-import { addDays, isExpired, randomLicenseCode } from '../../lib/utils'
-import { createAuditLog } from '../../lib/audit'
+import { prisma } from '../../lib/prisma.js'
+import { parseWithSchema } from '../../lib/validation.js'
+import { requireAdminAuth } from '../../plugins/auth.js'
+import { AppError } from '../../lib/errors.js'
+import { addDays, isExpired, randomLicenseCode } from '../../lib/utils.js'
+import { createAuditLog } from '../../lib/audit.js'
 
 async function generateUniqueLicenseCode(): Promise<string> {
   for (let attempt = 0; attempt < 10; attempt += 1) {
@@ -469,3 +469,4 @@ export async function licenseRoutes(app: FastifyInstance) {
     }
   })
 }
+

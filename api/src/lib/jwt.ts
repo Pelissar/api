@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken'
-import { env } from './env'
+import { env } from './env.js'
 
 export interface AccessTokenPayload {
   sub: string
@@ -68,3 +68,4 @@ export function verifyPortalAccessToken(token: string): PortalAccessTokenPayload
 export function verifyPortalRefreshToken(token: string): PortalRefreshTokenPayload {
   return jwt.verify(token, env.JWT_REFRESH_SECRET) as PortalRefreshTokenPayload
 }
+

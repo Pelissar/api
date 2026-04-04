@@ -1,10 +1,10 @@
 import type { FastifyInstance } from 'fastify'
 import { paginationQuerySchema, planSchema } from '@nexus/shared'
-import { prisma } from '../../lib/prisma'
-import { parseWithSchema } from '../../lib/validation'
-import { requireAdminAuth } from '../../plugins/auth'
-import { AppError } from '../../lib/errors'
-import { createAuditLog } from '../../lib/audit'
+import { prisma } from '../../lib/prisma.js'
+import { parseWithSchema } from '../../lib/validation.js'
+import { requireAdminAuth } from '../../plugins/auth.js'
+import { AppError } from '../../lib/errors.js'
+import { createAuditLog } from '../../lib/audit.js'
 
 export async function planRoutes(app: FastifyInstance) {
   app.get('/plans', { preHandler: requireAdminAuth }, async (request) => {
@@ -148,3 +148,4 @@ export async function planRoutes(app: FastifyInstance) {
     return { success: true }
   })
 }
+

@@ -1,6 +1,6 @@
 import type { FastifyInstance } from 'fastify'
-import { prisma } from '../../lib/prisma'
-import { requireAdminAuth } from '../../plugins/auth'
+import { prisma } from '../../lib/prisma.js'
+import { requireAdminAuth } from '../../plugins/auth.js'
 
 export async function dashboardRoutes(app: FastifyInstance) {
   app.get('/dashboard/metrics', { preHandler: requireAdminAuth }, async (request) => {
@@ -119,3 +119,4 @@ export async function dashboardRoutes(app: FastifyInstance) {
     }
   })
 }
+

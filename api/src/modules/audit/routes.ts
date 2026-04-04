@@ -1,10 +1,10 @@
 import type { FastifyInstance } from 'fastify'
 import { z } from 'zod'
 import { paginationQuerySchema } from '@nexus/shared'
-import { prisma } from '../../lib/prisma'
-import { createAuditLog } from '../../lib/audit'
-import { parseWithSchema } from '../../lib/validation'
-import { requireAdminAuth } from '../../plugins/auth'
+import { prisma } from '../../lib/prisma.js'
+import { createAuditLog } from '../../lib/audit.js'
+import { parseWithSchema } from '../../lib/validation.js'
+import { requireAdminAuth } from '../../plugins/auth.js'
 
 const auditLogsQuerySchema = paginationQuerySchema.extend({
   days: z.coerce.number().int().min(1).max(90).default(30)
@@ -86,3 +86,4 @@ export async function auditRoutes(app: FastifyInstance) {
     }
   })
 }
+

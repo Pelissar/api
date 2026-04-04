@@ -1,14 +1,14 @@
 import type { FastifyInstance } from 'fastify'
 import { loginSchema, refreshTokenSchema } from '@nexus/shared'
-import { prisma } from '../../lib/prisma'
-import { comparePassword } from '../../lib/password'
-import { parseWithSchema } from '../../lib/validation'
-import { AppError } from '../../lib/errors'
-import { createAuditLog } from '../../lib/audit'
-import { env } from '../../lib/env'
-import { requireAdminAuth } from '../../plugins/auth'
-import { sha256 } from '../../lib/utils'
-import { signAccessToken, signRefreshToken, verifyRefreshToken } from '../../lib/jwt'
+import { prisma } from '../../lib/prisma.js'
+import { comparePassword } from '../../lib/password.js'
+import { parseWithSchema } from '../../lib/validation.js'
+import { AppError } from '../../lib/errors.js'
+import { createAuditLog } from '../../lib/audit.js'
+import { env } from '../../lib/env.js'
+import { requireAdminAuth } from '../../plugins/auth.js'
+import { sha256 } from '../../lib/utils.js'
+import { signAccessToken, signRefreshToken, verifyRefreshToken } from '../../lib/jwt.js'
 
 function mapAdminUser(adminUser: {
   id: string
@@ -188,3 +188,4 @@ export async function authRoutes(app: FastifyInstance) {
     return { user: mapAdminUser(adminUser) }
   })
 }
+

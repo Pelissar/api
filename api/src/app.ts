@@ -6,11 +6,8 @@ import multipart from '@fastify/multipart'
 import rateLimit from '@fastify/rate-limit'
 import fastifyStatic from '@fastify/static'
 import { ZodError } from 'zod'
-
-// ✅ IMPORTS LOCAIS COM .js
 import { env } from './lib/env.js'
 import { AppError } from './lib/errors.js'
-
 import { authRoutes } from './modules/auth/routes.js'
 import { clientRoutes } from './modules/clients/routes.js'
 import { planRoutes } from './modules/plans/routes.js'
@@ -46,37 +43,31 @@ export async function createApp() {
     logger: true
   })
 
-  // garante pasta de storage
   fs.mkdirSync(env.STORAGE_DIR, { recursive: true })
 
-  // plugins
   await app.register(cors, {
     origin: (origin, callback) => {
       callback(null, isOriginAllowed(origin))
     }
   })
-
   await app.register(rateLimit, {
     global: false,
     skipOnError: true
   })
-
   await app.register(multipart, {
     limits: {
-      fileSize: 1024 * 1024 * 1024 // 1GB
+      fileSize: 1024 * 1024 * 1024
     }
   })
-
   await app.register(fastifyStatic, {
     root: path.resolve(env.STORAGE_DIR),
     prefix: '/storage/'
   })
 
-  // tratamento de erros
   app.setErrorHandler((error, _request, reply) => {
     if (error instanceof ZodError) {
       return reply.status(400).send({
-        message: 'Dados inválidos.',
+        message: 'Dados invalidos.',
         issues: error.issues
       })
     }
@@ -88,20 +79,17 @@ export async function createApp() {
     }
 
     app.log.error(error)
-
     return reply.status(500).send({
       message: 'Erro interno do servidor.'
     })
   })
 
-  // healthcheck
   app.get('/health', async () => ({
     ok: true,
     service: 'nexus-api',
     timestamp: new Date().toISOString()
   }))
 
-  // rotas
   await authRoutes(app)
   await dashboardRoutes(app)
   await clientRoutes(app)
@@ -115,3 +103,4 @@ export async function createApp() {
 
   return app
 }
+

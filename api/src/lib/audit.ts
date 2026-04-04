@@ -1,5 +1,5 @@
 import type { Prisma } from '@prisma/client'
-import { prisma } from './prisma'
+import { prisma } from './prisma.js'
 
 interface AuditInput {
   tenantId: string
@@ -22,3 +22,4 @@ export async function createAuditLog(input: AuditInput) {
     }
   })
 }
+

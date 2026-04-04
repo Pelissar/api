@@ -1,9 +1,9 @@
 import type { FastifyInstance } from 'fastify'
 import { z } from 'zod'
-import { prisma } from '../../lib/prisma'
-import { parseWithSchema } from '../../lib/validation'
-import { AppError } from '../../lib/errors'
-import { isExpired } from '../../lib/utils'
+import { prisma } from '../../lib/prisma.js'
+import { parseWithSchema } from '../../lib/validation.js'
+import { AppError } from '../../lib/errors.js'
+import { isExpired } from '../../lib/utils.js'
 
 const desktopRecordTypeSchema = z.enum(['COMPANY', 'CUSTOMER', 'PRODUCT', 'ORDER', 'USER'])
 
@@ -179,3 +179,4 @@ export async function desktopRoutes(app: FastifyInstance) {
     }
   })
 }
+

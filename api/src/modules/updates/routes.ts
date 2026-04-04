@@ -3,13 +3,13 @@ import path from 'node:path'
 import type { FastifyInstance } from 'fastify'
 import { Prisma } from '@prisma/client'
 import { appVersionSchema, paginationQuerySchema } from '@nexus/shared'
-import { prisma } from '../../lib/prisma'
-import { parseWithSchema } from '../../lib/validation'
-import { requireAdminAuth } from '../../plugins/auth'
-import { AppError } from '../../lib/errors'
-import { createAuditLog } from '../../lib/audit'
-import { storeUpdateFile } from '../../lib/storage'
-import { safeJsonParse, isExpired } from '../../lib/utils'
+import { prisma } from '../../lib/prisma.js'
+import { parseWithSchema } from '../../lib/validation.js'
+import { requireAdminAuth } from '../../plugins/auth.js'
+import { AppError } from '../../lib/errors.js'
+import { createAuditLog } from '../../lib/audit.js'
+import { storeUpdateFile } from '../../lib/storage.js'
+import { safeJsonParse, isExpired } from '../../lib/utils.js'
 
 function parseBooleanValue(input: string | undefined, fallback = false) {
   if (input == null) return fallback
@@ -338,3 +338,4 @@ export async function updateRoutes(app: FastifyInstance) {
 function isOperational(status: string) {
   return status === 'ATIVA' || status === 'TESTE'
 }
+

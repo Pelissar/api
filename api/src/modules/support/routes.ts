@@ -5,11 +5,11 @@ import {
   supportTicketReplySchema,
   supportTicketStatusSchema
 } from '@nexus/shared'
-import { prisma } from '../../lib/prisma'
-import { parseWithSchema } from '../../lib/validation'
-import { requireAdminAuth, requirePortalAuth } from '../../plugins/auth'
-import { AppError } from '../../lib/errors'
-import { createAuditLog } from '../../lib/audit'
+import { prisma } from '../../lib/prisma.js'
+import { parseWithSchema } from '../../lib/validation.js'
+import { requireAdminAuth, requirePortalAuth } from '../../plugins/auth.js'
+import { AppError } from '../../lib/errors.js'
+import { createAuditLog } from '../../lib/audit.js'
 
 function ensureTicketIsNotClosed(status: string) {
   if (status === 'FECHADO') {
@@ -318,3 +318,4 @@ export async function supportRoutes(app: FastifyInstance) {
     return { success: true }
   })
 }
+

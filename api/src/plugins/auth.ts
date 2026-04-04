@@ -1,6 +1,6 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
-import { verifyAccessToken, verifyPortalAccessToken } from '../lib/jwt'
-import { AppError } from '../lib/errors'
+import { verifyAccessToken, verifyPortalAccessToken } from '../lib/jwt.js'
+import { AppError } from '../lib/errors.js'
 
 export async function requireAdminAuth(request: FastifyRequest, _reply: FastifyReply) {
   const header = request.headers.authorization
@@ -41,3 +41,4 @@ export async function requirePortalAuth(request: FastifyRequest, _reply: Fastify
     throw new AppError('Token de acesso do cliente invalido ou expirado.', 401)
   }
 }
+

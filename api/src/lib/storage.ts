@@ -3,7 +3,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { pipeline } from 'node:stream/promises'
 import type { MultipartFile } from '@fastify/multipart'
-import { env } from './env'
+import { env } from './env.js'
 
 export interface StoredFileResult {
   fileName: string
@@ -36,3 +36,4 @@ export async function storeUpdateFile(file: MultipartFile, version: string): Pro
     checksum: hash.digest('hex')
   }
 }
+

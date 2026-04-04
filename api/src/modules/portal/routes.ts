@@ -9,14 +9,14 @@ import {
   portalUserCreateSchema,
   portalUserStatusSchema
 } from '@nexus/shared'
-import { prisma } from '../../lib/prisma'
-import { comparePassword, hashPassword } from '../../lib/password'
-import { parseWithSchema } from '../../lib/validation'
-import { AppError } from '../../lib/errors'
-import { createAuditLog } from '../../lib/audit'
-import { requireAdminAuth, requirePortalAuth } from '../../plugins/auth'
-import { sha256, addDays, isExpired } from '../../lib/utils'
-import { signPortalAccessToken, signPortalRefreshToken, verifyPortalRefreshToken } from '../../lib/jwt'
+import { prisma } from '../../lib/prisma.js'
+import { comparePassword, hashPassword } from '../../lib/password.js'
+import { parseWithSchema } from '../../lib/validation.js'
+import { AppError } from '../../lib/errors.js'
+import { createAuditLog } from '../../lib/audit.js'
+import { requireAdminAuth, requirePortalAuth } from '../../plugins/auth.js'
+import { sha256, addDays, isExpired } from '../../lib/utils.js'
+import { signPortalAccessToken, signPortalRefreshToken, verifyPortalRefreshToken } from '../../lib/jwt.js'
 
 function mapPortalUser(user: {
   id: string
@@ -504,3 +504,4 @@ export async function portalRoutes(app: FastifyInstance) {
     return mapPortalUser(item)
   })
 }
+
