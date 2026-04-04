@@ -6,12 +6,13 @@
     "strict": true,
     "skipLibCheck": true,
     "outDir": "dist",
+    "rootDir": "src",
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "baseUrl": ".",
     "paths": {
-      "@nexus/shared": ["./shared/dist/index.d.ts"],
-      "@nexus/shared/*": ["./shared/dist/*.d.ts"]
+      "@nexus/shared": ["../shared/dist/index.js"],
+      "@nexus/shared/*": ["../shared/dist/*.js"]
     }
   },
   "include": ["src"]
