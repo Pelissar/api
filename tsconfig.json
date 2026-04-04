@@ -2,18 +2,17 @@
   "compilerOptions": {
     "target": "ES2022",
     "module": "ESNext",
-    "moduleResolution": "NodeNext",
-    "module": "NodeNext"
+    "moduleResolution": "Bundler",
+    "rootDir": "src",
     "strict": true,
     "skipLibCheck": true,
     "outDir": "dist",
-    "rootDir": "src",
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "baseUrl": ".",
     "paths": {
-      "@nexus/shared": ["../shared/dist/index.js"],
-      "@nexus/shared/*": ["../shared/dist/*.js"]
+      "@nexus/shared": ["./shared/dist/index.d.ts"],
+      "@nexus/shared/*": ["./shared/dist/*.d.ts"]
     }
   },
   "include": ["src"]
