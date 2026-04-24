@@ -61,11 +61,17 @@ export async function updateRoutes(app: FastifyInstance) {
     return item
   })
 
-  app.get('/updates/latest', { preHandler: requireAdminAuth }, async (request) => {
+  app.get('/updates/latest', async (request) => {
     const channel = String((request.query as { channel?: string })?.channel || 'STABLE')
+    const tenantId = (request.auth?.tenantId as string | undefined) || (request.query as { tenantId?: string }).tenantId
+
+    if (!tenantId) {
+      throw new AppError('Acesso nao autorizado. Tenant ID ausente.', 401)
+    }
+
     const item = await prisma.appVersion.findFirst({
       where: {
-        tenantId: request.auth!.tenantId,
+        tenantId,
         releaseChannel: channel as any,
         isActive: true
       },
@@ -333,9 +339,38 @@ export async function updateRoutes(app: FastifyInstance) {
 
     return reply.send(fs.createReadStream(version.filePath))
   })
+
+  app.get('/public/downloads/:versionId', async (request, reply) => {
+    const { versionId } = request.params as { versionId: string }
+    const tenantId = (request.auth?.tenantId as string | undefined) || (request.query as { tenantId?: string }).tenantId
+
+    const version = await prisma.appVersion.findFirst({
+      where: {
+        id: versionId,
+        isActive: true,
+        ...(tenantId ? { tenantId } : {})
+      }
+    })
+
+    if (!version) {
+      throw new AppError('Versao publica nao encontrada.', 404)
+    }
+
+    if (!fs.existsSync(version.filePath)) {
+      throw new AppError('Arquivo da versao nao encontrado.', 404)
+    }
+
+    const stats = fs.statSync(version.filePath)
+    const downloadName = path.basename(version.fileName || version.filePath)
+
+    reply.header('Content-Type', 'application/octet-stream')
+    reply.header('Content-Length', String(stats.size))
+    reply.header('Content-Disposition', `attachment; filename=\"${downloadName}\"`)
+
+    return reply.send(fs.createReadStream(version.filePath))
+  })
 }
 
 function isOperational(status: string) {
   return status === 'ATIVA' || status === 'TESTE'
 }
-
