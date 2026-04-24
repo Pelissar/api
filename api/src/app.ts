@@ -48,7 +48,10 @@ export async function createApp() {
   await app.register(cors, {
     origin: (origin, callback) => {
       callback(null, isOriginAllowed(origin))
-    }
+    },
+    methods: ['GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    exposedHeaders: ['Content-Disposition', 'Content-Length']
   })
   await app.register(rateLimit, {
     global: false,
@@ -85,6 +88,12 @@ export async function createApp() {
   })
 
   app.get('/health', async () => ({
+    ok: true,
+    service: 'nexus-api',
+    timestamp: new Date().toISOString()
+  }))
+
+  app.get('/healthz', async () => ({
     ok: true,
     service: 'nexus-api',
     timestamp: new Date().toISOString()
