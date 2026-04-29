@@ -5,7 +5,7 @@ import { parseWithSchema } from '../../lib/validation.js'
 import { AppError } from '../../lib/errors.js'
 import { isExpired } from '../../lib/utils.js'
 
-const desktopRecordTypeSchema = z.enum(['COMPANY', 'CUSTOMER', 'PRODUCT', 'ORDER', 'USER'])
+const desktopRecordTypeSchema = z.enum(['COMPANY', 'CUSTOMER', 'PRODUCT', 'ORDER', 'USER', 'EMPLOYEE', 'EMPLOYEE_ADVANCE'])
 
 const desktopSyncSchema = z.object({
   licenseCode: z.string().trim().min(8),
@@ -30,7 +30,9 @@ const recordPriority: Record<z.infer<typeof desktopRecordTypeSchema>, number> = 
   USER: 1,
   CUSTOMER: 2,
   PRODUCT: 3,
-  ORDER: 4
+  ORDER: 4,
+  EMPLOYEE: 5,
+  EMPLOYEE_ADVANCE: 6
 }
 
 function ensureLicenseOperational(license: {

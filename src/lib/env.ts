@@ -22,11 +22,19 @@ const envSchema = z.object({
   ADMIN_SEED_EMAIL: z.string().default('lucaspelissar@hotmail.com'),
   ADMIN_SEED_PASSWORD: z.string().default('Ctrl@1004'),
   CORS_ORIGIN: z.string().default('*'),
+  CONFIG_ENCRYPTION_SECRET: z.string().min(32).optional(),
   STORAGE_DIR: z
     .string()
     .default(path.resolve(process.cwd(), 'storage'))
     .transform((value) => (path.isAbsolute(value) ? value : path.resolve(process.cwd(), value))),
-  DEFAULT_TENANT_SLUG: z.string().default('default')
+  DEFAULT_TENANT_SLUG: z.string().default('default'),
+  WHATSAPP_PHONE_NUMBER_ID: z.string().optional(),
+  WHATSAPP_ACCESS_TOKEN: z.string().optional(),
+  WHATSAPP_VERIFY_TOKEN: z.string().optional(),
+  WHATSAPP_BUSINESS_ACCOUNT_ID: z.string().optional(),
+  WHATSAPP_GRAPH_VERSION: z.string().default('v21.0'),
+  OPENAI_API_KEY: z.string().optional(),
+  OPENAI_MODEL: z.string().default('gpt-4o-mini')
 })
 
 export const env = envSchema.parse(process.env)

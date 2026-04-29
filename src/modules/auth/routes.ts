@@ -96,6 +96,7 @@ export async function authRoutes(app: FastifyInstance) {
 
       return {
         user: mapAdminUser(adminUser),
+        tenantId: adminUser.tenantId,
         accessToken,
         refreshToken
       }

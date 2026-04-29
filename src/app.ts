@@ -18,6 +18,7 @@ import { auditRoutes } from './modules/audit/routes.js'
 import { desktopRoutes } from './modules/desktop/routes.js'
 import { portalRoutes } from './modules/portal/routes.js'
 import { supportRoutes } from './modules/support/routes.js'
+import { whatsappRoutes } from './modules/whatsapp/whatsapp.routes.js'
 
 function isOriginAllowed(origin: string | undefined): boolean {
   if (!origin) return true
@@ -109,6 +110,7 @@ export async function createApp() {
   await auditRoutes(app)
   await portalRoutes(app)
   await supportRoutes(app)
+  await whatsappRoutes(app)
 
   return app
 }

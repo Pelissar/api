@@ -58,6 +58,8 @@ enum DesktopRecordType {
   PRODUCT
   ORDER
   USER
+  EMPLOYEE
+  EMPLOYEE_ADVANCE
 }
 
 enum SupportTicketStatus {
@@ -80,6 +82,40 @@ enum SupportTicketSenderType {
   ADMIN
 }
 
+enum WhatsAppConversationStatus {
+  OPEN
+  WAITING_USER
+  CLOSED
+}
+
+enum WhatsAppMessageDirection {
+  INBOUND
+  OUTBOUND
+}
+
+enum WhatsAppMessageType {
+  TEXT
+  IMAGE
+  AUDIO
+  DOCUMENT
+  SYSTEM
+}
+
+enum WhatsAppMessageStatus {
+  RECEIVED
+  DRAFT
+  SENT
+  FAILED
+}
+
+enum WhatsAppAiSuggestionStatus {
+  PENDING
+  APPROVED
+  EDITED
+  REJECTED
+  SENT
+}
+
 model Tenant {
   id                  String               @id @default(uuid())
   name                String
@@ -98,6 +134,8 @@ model Tenant {
   portalRefreshTokens PortalRefreshToken[]
   portalResetTokens   PortalPasswordResetToken[]
   supportTickets      SupportTicket[]
+  whatsappConversations WhatsAppConversation[]
+  whatsappSettings    WhatsAppSettings[]
   refreshTokens       RefreshToken[]
   passwordResetTokens PasswordResetToken[]
 }
@@ -169,6 +207,7 @@ model Client {
   licenses  License[]
   portalUsers PortalUser[]
   supportTickets SupportTicket[]
+  whatsappConversations WhatsAppConversation[]
 
   @@unique([tenantId, cpfCnpj])
   @@index([tenantId, name])
@@ -403,4 +442,74 @@ model DesktopRecord {
 
   @@index([tenantId, recordType, updatedAt])
   @@index([tenantId, isDeleted, updatedAt])
+}
+
+model WhatsAppConversation {
+  id             String                     @id @default(uuid())
+  tenantId       String
+  tenant         Tenant                     @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  customerId     String?
+  customer       Client?                    @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  phone          String
+  customerName   String?
+  status         WhatsAppConversationStatus @default(OPEN)
+  lastMessageAt  DateTime?
+  createdAt      DateTime                   @default(now())
+  updatedAt      DateTime                   @updatedAt
+  messages       WhatsAppMessage[]
+  aiSuggestions  WhatsAppAiSuggestion[]
+
+  @@index([tenantId, status, lastMessageAt])
+  @@index([tenantId, phone])
+  @@index([customerId])
+}
+
+model WhatsAppMessage {
+  id                String                   @id @default(uuid())
+  conversationId    String
+  conversation      WhatsAppConversation     @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  direction         WhatsAppMessageDirection
+  type              WhatsAppMessageType      @default(TEXT)
+  body              String
+  whatsappMessageId String?                  @unique
+  status            WhatsAppMessageStatus    @default(RECEIVED)
+  aiSuggested       Boolean                  @default(false)
+  createdAt         DateTime                 @default(now())
+  suggestions       WhatsAppAiSuggestion[]   @relation("SuggestionSourceMessage")
+
+  @@index([conversationId, createdAt])
+  @@index([status])
+}
+
+model WhatsAppAiSuggestion {
+  id              String                     @id @default(uuid())
+  conversationId  String
+  conversation    WhatsAppConversation       @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sourceMessageId String
+  sourceMessage   WhatsAppMessage            @relation("SuggestionSourceMessage", fields: [sourceMessageId], references: [id], onDelete: Cascade)
+  suggestionText  String
+  status          WhatsAppAiSuggestionStatus @default(PENDING)
+  createdAt       DateTime                   @default(now())
+  updatedAt       DateTime                   @updatedAt
+
+  @@index([conversationId, status, createdAt])
+  @@index([sourceMessageId])
+}
+
+model WhatsAppSettings {
+  id                   String   @id @default(uuid())
+  tenantId             String
+  tenant               Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  phoneNumberId        String?
+  businessAccountId    String?
+  verifyToken          String?
+  accessToken          String?
+  openAiApiKey         String?
+  aiEnabled            Boolean  @default(true)
+  manualApprovalRequired Boolean @default(true)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  @@unique([tenantId])
+  @@index([phoneNumberId])
 }
